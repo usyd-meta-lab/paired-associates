@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Word Pairs</title>
+	<script src= 'jspsych-6-2/jspsych.js'></script>
+ <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+ <script src='jspsych-6-2/plugins/jspsych-html-keyboard-response.js'></script>
+ <script src='jspsych-6-2/plugins/jspsych-instructions.js'></script>
+ <script src='jspsych-6-2/plugins/jspsych-survey-text.js'></script>
+ <script src='jspsych-6-2/custom-plugins/tetris-trial.js'></script>
+ <script src='jspsych-6-2/custom-plugins/study-trial.js'></script>
+ <script src='jspsych-6-2/custom-plugins/test-trial.js'></script>
+ <script src='jspsych-6-2/custom-plugins/jspsych-html-visual-slider-response.js'></script>
+ <script src='jspsych-6-2/custom-plugins/jspsych-survey-demographics.js'></script>
+<link href="jspsych-6-2/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+<link href="jspsych-6-2/custom-plugins/custom.css" rel="stylesheet" type="text/css"></link>
+         
+    </head>
+    <body></body>
+      <script>
+
+
+
+
+
+
+/* experiment parameters */
+var reps_per_trial_type = 1;
+var eta = 20;
+var goal = "to memorize some word-pairs."
+var experimentname = "CRIME20B"; // Make sure there is a folder on the server with this name 
+var condition = jsPsych.randomization.sampleWithReplacement(["High", "Low"], 1);
+
+
+
+
+var Cue = ["beautiful", "exact", "adorable", "bake", "mine", "nephew", "large", "eye", "jumpy", "snatch", "slender", "embrace", "breakfast", "cashew", "annual", "dump", 
+"gull", "mule", "chunk", "strand", "ape", "cigarette", "trot", "juice", "tile", "hog", "sprain", "assistant", "cop", "ski", "stench", "drain", "artery", "deep", "calendar", 
+"lumber", "wicker", "kind", "ceiling", "brother"]
+
+
+
+var answer = ["pretty", "precise", "cute", "cake", "yours", "niece", "small", "see", "nervous", "take", "thin", "hug", "lunch", "nut", "yearly", "garbage", "sea", "donkey", 
+"piece", "hair", "monkey", "smoke", "horse", "orange", "floor", "pig", "ankle", "helper", "police", "snow", "smell", "sink", "vein", "shallow", "date", "wood", "basket",
+"nice", "roof", "sister"]
+
+
+
+function fillArray(value, len) {
+  var arr = [];
+  for (var i = 0; i < len; i++) {
+    arr.push(value);
+  }
+  return arr;
+}
+
+
+
+
+
+
+if(condition == "High"){
+
+ type = fillArray("test-trial", 28);
+ typeB = fillArray("study-trial", 12);
+ type = type.concat(typeB);
+ type = jsPsych.randomization.repeat(type, 1);
+
+}
+
+
+if(condition == "Low"){
+
+ type = fillArray("test-trial", 12);
+ typeB = fillArray("study-trial", 28);
+ type = type.concat(typeB);
+ type = jsPsych.randomization.repeat(type, 1);
+
+
+}
+
+
+
+
+
+
+var test_stimuli = [
+  { stimulus: Cue[0], answer: answer[0], display_type: type[0]},
+  { stimulus: Cue[1], answer: answer[1], display_type: type[1]},
+  { stimulus: Cue[2], answer: answer[2], display_type: type[2]},
+  { stimulus: Cue[3], answer: answer[3], display_type: type[3]},
+  { stimulus: Cue[4], answer: answer[4], display_type: type[4]},
+   { stimulus: Cue[5], answer: answer[5], display_type: type[5]},
+ { stimulus: Cue[6], answer: answer[6], display_type: type[6]},
+ { stimulus: Cue[7], answer: answer[7], display_type: type[7]},
+ { stimulus: Cue[8], answer: answer[8], display_type: type[8]},
+ { stimulus: Cue[9], answer: answer[9], display_type: type[9]},
+ { stimulus: Cue[10], answer: answer[10], display_type: type[10]},
+ { stimulus: Cue[11], answer: answer[11], display_type: type[11]},
+ { stimulus: Cue[12], answer: answer[12], display_type: type[12]},
+ { stimulus: Cue[13], answer: answer[13], display_type: type[13]},
+ { stimulus: Cue[14], answer: answer[14], display_type: type[14]},
+ { stimulus: Cue[15], answer: answer[15], display_type: type[15]},
+ { stimulus: Cue[16], answer: answer[16], display_type: type[16]},
+ { stimulus: Cue[17], answer: answer[17], display_type: type[17]},
+ { stimulus: Cue[18], answer: answer[18], display_type: type[18]},
+ { stimulus: Cue[19], answer: answer[19], display_type: type[19]},
+ { stimulus: Cue[20], answer: answer[20], display_type: type[20]},
+ { stimulus: Cue[21], answer: answer[21], display_type: type[21]},
+ { stimulus: Cue[22], answer: answer[22], display_type: type[22]},
+ { stimulus: Cue[23], answer: answer[23], display_type: type[23]},
+ { stimulus: Cue[24], answer: answer[24], display_type: type[24]},
+ { stimulus: Cue[25], answer: answer[25], display_type: type[25]},
+ { stimulus: Cue[26], answer: answer[26], display_type: type[26]},
+ { stimulus: Cue[27], answer: answer[27], display_type: type[27]},
+ { stimulus: Cue[28], answer: answer[28], display_type: type[28]},
+ { stimulus: Cue[29], answer: answer[29], display_type: type[29]},
+ { stimulus: Cue[30], answer: answer[30], display_type: type[30]},
+ { stimulus: Cue[31], answer: answer[31], display_type: type[31]},
+ { stimulus: Cue[32], answer: answer[32], display_type: type[32]},
+ { stimulus: Cue[33], answer: answer[33], display_type: type[33]},
+ { stimulus: Cue[34], answer: answer[34], display_type: type[34]},
+ { stimulus: Cue[35], answer: answer[35], display_type: type[35]},
+ { stimulus: Cue[36], answer: answer[36], display_type: type[36]},
+ { stimulus: Cue[37], answer: answer[37], display_type: type[37]},
+ { stimulus: Cue[38], answer: answer[38], display_type: type[38]},
+ { stimulus: Cue[39], answer: answer[39], display_type: type[39]}
+
+];
+
+
+
+
+
+
+
+
+/*set up welcome block*/
+var welcome = {
+  type: 'survey-text',
+  questions: [
+    {prompt: "Please enter your Mturk ID", name: 'turkID', required:true}
+  ],
+  preamble: "<font size = '15' color='#002080'><b>Welcome to the experiment!</b></font><br><br> This experiment will run for about " + eta + " minutes. Your goal will be " + goal,
+  button_label: "Login",
+};
+
+
+
+/*set up demographics block*/
+
+var demographics = {
+  type: 'survey-demographics',
+  preamble: "<font size = '15' color='#002080'>Basic Information</font>",
+  questions: [
+    {prompt: "Sex:", name: 'Sex', options: ["Male", "Female" ,"Prefer not to say"], required:true},
+    {prompt: "Do you speak english fluently?:", name: 'english', options: ["Yes", "No"], required:true}
+    ]
+};
+
+
+
+
+// declare the block.
+var tetris = {
+  type:'tetris-trial',
+    cue: jsPsych.timelineVariable('stimulus'),
+    answer: jsPsych.timelineVariable('answer'),
+   choices: jsPsych.NO_KEYS,
+    trial_duration: 120000,
+  
+};
+
+// Study trials
+
+var study = {
+  timeline: [{
+    type: 'study-trial',
+    cue: jsPsych.timelineVariable('stimulus'),
+    answer: jsPsych.timelineVariable('answer'),
+   choices: jsPsych.NO_KEYS,
+    trial_duration: 4000,
+    response_ends_trial: true
+  }],
+  timeline_variables: test_stimuli,
+  randomize_order: true
+};
+
+
+var cue_names  = jsPsych.randomization.repeat(["self-testing", "re-reading"], 1);
+
+var rating = {
+    type: 'html-slider-response',
+   stimulus: [cue_names[0] + " vs. " + cue_names[1]],
+    labels: ['-100% - '+cue_names[0]+' IMPROVES memory compared to '+cue_names[1],
+'0% - '+cue_names[0]+' has no effect on memory compared to '+cue_names[1]+'',
+'100% - '+cue_names[1]+' IMPROVES memory compared to '+cue_names[0]],
+    start: -100,
+    min: -100,
+    max: 100,
+    slider_width: '600',
+    button_label: 'Next',
+    prompt: ["<p>On a scale from -100% to 100%, rate how effective you think the "+ cue_names[0] +" is compared to doing "+cue_names[1]+", if at all</p>"],
+    feedback_on:false,
+    on_load: function() {
+   alert("We are now going to ask you to make some judgements about the study techniques that you have just used");
+  }
+     
+
+	};
+
+
+
+
+var test = {
+  timeline: [{
+    type: 'test-trial',
+    cue: jsPsych.timelineVariable('stimulus'),
+    answer: jsPsych.timelineVariable('answer'),
+   choices: jsPsych.NO_KEYS,
+    response_ends_trial: true,
+    on_finish: function(data){
+        var correct = false;
+        if(data.correctAnswer ==  data.response ){
+          correct = true;
+        }
+        data.correct = correct;
+        console.log(data);
+    }
+  }],
+   timeline_variables: test_stimuli,
+  randomize_order: true
+
+};
+
+
+
+
+
+
+
+
+var mixed = {
+  timeline: [{
+    type: jsPsych.timelineVariable('display_type'),
+    cue: jsPsych.timelineVariable('stimulus'),
+    answer: jsPsych.timelineVariable('answer'),
+   choices: jsPsych.NO_KEYS,
+   trial_duration: 4000,
+    response_ends_trial: false,
+    on_finish: function(data){
+        var correct = false;
+        if(data.correctAnswer ==  data.response ){
+          correct = true;
+        }
+        data.correct = correct;
+        console.log(data);
+    }
+  }],
+  timeline_variables: test_stimuli,
+  randomize_order: true
+  
+};
+
+
+
+
+
+  
+  
+    
+
+
+
+
+var blockBreak1 = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Study Phase 1</p>',
+    choices: jsPsych.ALL_KEYS,
+    prompt: '<p>Press any key to continue</p>'
+  }
+
+var blockBreak2 = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>End of Study Phase 1</p>',
+    choices: jsPsych.ALL_KEYS,
+    prompt: '<p>Press any key to continue</p>'
+  }
+  
+  var blockBreak3 = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Study Phase 2</p>',
+    choices: jsPsych.ALL_KEYS,
+    prompt: '<p>Press any key to continue</p>'
+  }
+
+var blockBreak4 = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>End of Study Phase 2. You will now play Tetris for 2 minutes</p>',
+    choices: jsPsych.ALL_KEYS,
+    prompt: '<p>Press any key to continue</p>'
+  }
+  
+  var blockBreak5 = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Test Phase</p>',
+    choices: jsPsych.ALL_KEYS,
+    prompt: '<p>Press any key to continue</p>'
+  }
+
+
+
+/*set up instructions block*/
+var instructions = {
+  type: "instructions",
+  pages: ["<p>In this task, you will memorize a series of word-pairs. For example,</p> <br><p style='color:darkblue;'>cat : mouse</p> <br><p>There will be 40 word-pairs for you to learn</p>",
+    "<p> You will see each pair twice. The first time round you will <b>read all the word pairs</b>. The second time round, you will <b>re-read some of the word pairs in full (e.g. cat : mouse), and self-test yourself on the others (e.g. cat : ????).</b></p>"],
+    show_clickable_nav: true
+};
+
+
+
+
+
+/*set up experiment structure*/
+var timeline = [];
+timeline.push(welcome);
+timeline.push(demographics);
+timeline.push(instructions);
+timeline.push(blockBreak1);
+timeline.push(study);
+timeline.push(blockBreak2);
+timeline.push(blockBreak3);
+timeline.push(mixed);
+timeline.push(rating);
+timeline.push(blockBreak4);
+timeline.push(tetris);
+timeline.push(blockBreak5);
+timeline.push(test);
+
+
+
+end_message = "The HIT is complete. Please return to Mturk and enter your Mturk ID. Thank you for your participation";
+
+
+
+
+
+/*Run experiment*/
+
+ID = jsPsych.randomization.randomID();
+jsPsych.data.addProperties({ID: ID});
+jsPsych.data.addProperties({condition: condition});
+jsPsych.data.addProperties({Cue_name1: cue_names[0]})
+jsPsych.data.addProperties({Cue_name2: cue_names[1]});
+
+
+
+	
+// Saving
+
+	function saveData(filename, experiment, filedata){
+	var filename = experiment + '/' + filename;
+   $.ajax({
+      type:'post',
+      cache: false,
+      url: 'http://edsciencelab.com/cgi-bin/jsPsych.php', // this is the path to the above PHP script
+      data: {filename: filename, filedata: filedata}
+   });
+}
+
+
+
+
+
+ jsPsych.init({
+        timeline: timeline,
+   on_finish: function(data){ var filestore = ID + '.csv'; var all_data = jsPsych.data.get(); saveData(filestore, experimentname, all_data.csv()); alert(end_message); }
+    });
+    
+
+
+</script>
