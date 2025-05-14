@@ -1,0 +1,217 @@
+/* 
+ * Container margin for slider elements with class "conf_rating".
+ * This sets the top margin to 0%.
+ */
+
+
+.conf_rating {
+  position: fixed;        /* Fixes the element relative to the viewport */
+  top: 50%;               /* Positions the top at 50% of viewport height */
+  left: 50%;              /* Optionally center horizontally */
+  transform: translate(-50%, -50%); /* Offsets the element's own height/width */
+  width: 100%;            /* Adjust or remove if not required */
+  margin: 0;              /* Remove any margin that might interfere */
+  --thumb-visibility: hidden;
+}
+
+
+
+
+/* 
+ * Combined slider track styles for WebKit-based browsers for both the 
+ * .conf_rating and .conf_instructions containers.
+ *
+ * These rules apply to the slider track area (the horizontal area where the thumb slides).
+ * - background: transparent → Ensures the track has no background color.
+ * - border: 0 → Removes any default borders.
+ * - height: 25px → Sets the height of the slider track.
+ */
+.conf_rating .jspsych-html-slider-response-container #jspsych-html-slider-response-response::-webkit-slider-runnable-track,
+.conf_instructions .jspsych-html-slider-response-container #jspsych-html-slider-response-response::-webkit-slider-runnable-track {
+  background: transparent;
+  border: 0;
+  height: 25px;
+}
+
+
+.conf_rating #jspsych-html-slider-response-response::-webkit-slider-thumb {
+  visibility: var(--thumb-visibility);
+   -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  margin-top: -1.5px;
+  background: #F2F1F1;
+  border: 1px solid #999999;
+  transition: visibility 0.3s ease-in-out;
+  }
+
+
+
+
+
+/* 
+ * Styling for instruction slider segments with class "conf_ins".
+ *
+ * - position: absolute → Allows precise positioning within their container.
+ * - background-color: transparent → No background color is applied.
+ * - height: 25px sets the element height.
+ * - border: thin solid black adds a visible outline.
+ * - margin-left: 25% positions the element relative to its container.
+ */
+.conf_ins {
+  position: absolute;
+  background-color: transparent;
+  height: 25px;
+  border: thin solid black;
+  margin-left: 25%;
+}
+
+/* 
+ * Base styling for slider segments with class "conf". These elements are 
+ * used for the slider response area.
+ *
+ * - Positioned absolutely.
+ * - Transparent background.
+ * - Fixed height of 25px.
+ * - Thin solid black border applied.
+ */
+.conf {
+  position: absolute;
+  background-color: transparent;
+  height: 25px;
+  border: thin solid black;
+}
+
+/* 
+ * Unique styling for the first slider segment (#conf1).
+ *
+ * - Adds rounded borders to the top-left and bottom-left corners.
+ */
+#conf1 {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+/* 
+ * For slider segments with ids #conf2, #conf3, and #conf4, 
+ * remove the left border.
+ *
+ * This visually joins these segments with adjacent elements.
+ */
+#conf2,
+#conf3,
+#conf4 {
+  border-left: 0;
+}
+
+/* 
+ * Unique styling for the last slider segment (#conf5).
+ *
+ * - Adds rounded borders to the top-right and bottom-right corners.
+ */
+#conf5 {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* 
+ * Styling for elements with class "survey".
+ *
+ * - Aligns text to the left.
+ */
+.survey {
+  text-align: left;
+}
+
+
+
+
+
+    .eff_rating{
+      --thumb-visibility: hidden;
+    }
+
+    /* === SLIDER + TRIANGLES WRAPPER === */
+    .custom-slider-container {
+      width: 800px;
+      margin: 120px auto 20px auto; /* push container down so roof clears instructions */
+      position: relative;
+    }
+
+    /* roof holding both triangles */
+    .roof {
+      position: absolute;
+      top: -90px;
+      left: 0;
+      width: 100%;
+      height: 90px;
+      z-index: 1;
+    }
+
+    .triangle {
+      position: absolute;
+      width: calc(50% - 8px);
+      height: 100%;
+      background: #ddd;
+      background-size: 100% 100%;
+    }
+    .triangle.left  { left: 0;  clip-path: polygon(0 0, 0 100%, 100% 100%); }
+    .triangle.right { right: 0; clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+
+    /* ===== SLIDER ===== */
+    .custom-slider-container input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      background: #ddd;
+      border-radius: 6px;
+      outline: none;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+    .custom-slider-container input[type=range]::-webkit-slider-thumb {
+       visibility: var(--thumb-visibility);
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #999;
+      cursor: pointer;
+      margin-top: -6px;
+    }
+    .custom-slider-container input[type=range]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #999;
+      cursor: pointer;
+    }
+
+    /* labels */
+    .custom-slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* prompt under slider */
+    .prompt-below {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px; /* space before submit button */
+    }
+
+    /* instructions above roof */
+    .eff_instructions {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      margin-bottom: 0; /* we push container instead */
+    }

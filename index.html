@@ -1,869 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>USYD Metacognition</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <title>USYD Meta Lab</title>
+  <link rel="icon" type="image/x-icon" href="https://usyd-meta-lab.github.io/favicon-32x32.png">
 
-  <!-- Load jsPsych and jquery-->
-  <script src="https://unpkg.com/jspsych@7.3.3"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/js/foundation.min.js'></script>
-  <link href="https://unpkg.com/jspsych@7.2.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+  <!-- Load jsPsych and dependencies -->
+  <script src="https://unpkg.com/jspsych@8.2.1"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/js/foundation.min.js"></script>
+  <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
   <link href="https://unpkg.com/jquery-ui-css@1.11.5/jquery-ui.css" rel="stylesheet" type="text/css" />
 
-
-
-
-  <!-- Load jsPsych plugins-->
-  <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.3"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-external-html@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-external-html@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-preload@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.2"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-browser-check@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-canvas-keyboard-response@1.1.2"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-call-function"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.2.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
+  <!-- Load jsPsych plugins -->
+  <script src="https://unpkg.com/@jspsych/plugin-instructions@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-external-html@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-preload@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-browser-check@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-canvas-keyboard-response@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-call-function@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-fullscreen@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-likert@2.1.0"></script>
   <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-external-html@2.0.0"></script>
 
-  <!-- Load the global environment-->
-  <script src="global-env.js"></script>
-  <script src="info_sheets.js"></script>
-  
-
-  <!-- Load tetris scoring from directory-->
-  <script src="stats.js"></script>  
+  <!-- Load the info sheets -->
+  <script src="https://usyd-meta-lab.github.io/files/info_sheets.js"></script>
 
 
-  <!-- Some custom CSS-->
-  <link href="custom-css.css" rel="stylesheet" type="text/css" />
+
+  <!-- Custom CSS -->
+  <link href="assets/css/custom-css.css" rel="stylesheet" type="text/css" />
 
 </head>
+
 <body></body>
+
 <script>
 
 
 
-//////////////////////////////////
-//         Gloabl Settings      //
-//////////////////////////////////
+/* 
+  ===============================================================
+  =                GLOBAL PARAMETERS                 =
+  ===============================================================
+*/
+
+
+/**
+ * These variables should be modified as needed:
+ * - DataPipe_ID:         The DataPipe ID to which the data will be saved.
+ * - SONA/prolific info:  Used for setting up redirect links.
+ */
+const DataPipe_ID = "Lczwvo2ReIZj";  // The DataPipe ID for where the data should be stored
+const sona_experiment_id = "NA";      // The SONA experiment ID 
+const sona_credit_token = "NA";       // The SONA credit token 
+const Prolific_redirect = "CHGWKNI0"; // The Prolific redirect link (to credit)
+const Prolific_failed_check = "C13PIUOF"; // The Prolific redirect link for failing an attention check
+const task_time = 30; // (minutes) for the PIS
+const accuracy_criterion = .55; // Accuracy cut-off for manual data review
+let condition = null;
+
+
+/**
+ * Asynchronously fetches a 'condition' from DataPipe (if needed),
+ * then runs the corresponding timeline. If you do not use multiple
+ * conditions, you could simply run condition_1_timeline directly.
+ */
+async function createExperiment() {
+   condition = await jsPsychPipe.getCondition(DataPipe_ID);
+  jsPsych.data.addProperties({ condition: condition });
+  console.log(condition)
 
-
-
-// Initalise jsPsych
-  const jsPsych = initJsPsych({
-   on_interaction_data_update: function(data) {
-     if(data.event == 'fullscreenexit' & pilot != 'true'){in_fullscreen = false}
-
-   },
- on_finish: function(data) {
-   if(aborted == true){alert("You must use Chrome or Firefox to complete this experiment.")}
-     if(aborted == false) {  if(jsPsych.data.get().filter({trial_type: "Summary Trial"}).select('correct').mean() < 0.55){window.location = attention_redirect_link} else {window.location = redirect_link}}
-   // jsPsych.data.get().localSave('csv','mydata.csv');
-}
-})
-
-
-// Settings (set these)
-
-  const DataPipe_ID = "foB2cm2gGYvj" // The DataPipe ID for where the data should be stored
-
-  const sona_experiment_id = "NA"; // The SONA experiment ID 
-  const sona_credit_token = "NA"; // The SONA credit token 
-  const Prolific_redirect = "CHGWKNI0"; // The Prolific redirect link (to credit)
-  const Prolific_failed_check = "C13PIUOF"; // The Prolific redirect link to NOT credit (manual review)
-  const task_time = 15; // time in minutes for the PIS 
-  exp_condition  = null;
-
-
-// Global parameters (might need to change)
-  const ratings_on = false; // Turn on/off confidence ratings 
-  const no_trials = 2;
-  const no_practice_trials = 2;
-
-
-  var in_fullscreen = true;
-  var trialnum = 1;
-  var blocknum = 1;
-  aborted = false;
-  phase = null;
-  pilot_speed = 1;
-  quiz_on = true;
-  quizzed_cues = [];
-
-  jsPsych.data.addProperties({ratings_on: ratings_on});
-
-
-
-//////////////////////////////////
-
-
-
-//
-
-
-
-
-  // Browser Check
-
-
-  var browser_check = {
-    timeline: [
-    {  
-      type: jsPsychBrowserCheck,
-      inclusion_function: (data) => {
-        return ['chrome', 'firefox'].includes(data.browser) && data.mobile === false;
-      },
-      exclusion_message: (data) => {
-        aborted = true;
-        if(data.mobile){
-          return '<p>You must use a desktop/laptop computer to participate in this experiment.</p>';
-        } else if(data.browser !== 'chrome'){
-          return '<p>You must use Chrome or Firefox as your browser to complete this experiment.</p>'
-        }
-      },
-    }
-    ],
-    conditional_function: function(){
-      if(pilot === 'true'){
-        return false;
-      } else {
-        return true;
-      }
-    }}
-
-
-
-// Enter Fullscreen
-
-    var enter_fullscreen = {
-      timeline: [
-        {type: jsPsychFullscreen,
-        message: '<p>To take part in the experiment, your browser must be in fullscreen mode. Exiting fullscreen mode will pause the experiment. <br></br>Please click the button below to enable fullscreen mode and continue.</p>',
-        fullscreen_mode: true,
-        on_finish: function(){
-          in_fullscreen = true;
-        }
-      }
-      ],
-      conditional_function: function(){
-        if(pilot === 'true'){
-          return false;
-        } else {
-          return true;
-        }
-      }
-    }
-
-
-
-
-// Instructions
-
-
-
-    var instructions = {
-      type: jsPsychInstructions,
-      pages: function(){
-        if(ratings_on == true) return [
-          '<p class="instructions"><h1>Welcome to the task!</h1></p>' +
-          '<p class="instructions">In this task, we will present you with a series of word pairs, like below.' +
-          '<p class="instructions">CAT : DOG' +
-          '<p class="instructions">For each word pair, the first word of the pair is on the left side and the second word of the pair is on the right side of the :' +
-          '<p class="instructions">Pay close attention to each word pair.' +
-          '<p class="instructions">For some word pairs, you will be asked to guess the word that completes the pair before you learn the answer e.g.' +
-          '<p class="instructions">CAT : ????' +
-          '<p class="instructions">Take a guess at which word completes the pair by entering it into the textbox. You will then see both words in the word pair.' +
-          '<p class="instructions">Once the series has finished, you will be prompted to recall the second word of each word pair, with the first word presented as prompts. Enter the second word of each word pair into the provided textbox.' +
-          '<p class="instructions"><b>Do not write down or record any of the word pairs, try to memorise them</b><br><br><br>' +
-          '<p class="instructions">Click "Next" when you are ready to begin.' 
-
-
-          ]
-         if(ratings_on == false) return [
-           '<p class="instructions"><h1>Welcome to the task!</h1></p>' +
-           '<p class="instructions">In this task, we will present you with a series of word pairs, like below.' +
-           '<p class="instructions">CAT : DOG' +
-           '<p class="instructions">For each word pair, the first word of the pair is on the left side and the second word of the pair is on the right side of the :' +
-           '<p class="instructions">Pay close attention to each word pair.' +
-           '<p class="instructions">For some word pairs, you will be asked to guess the word that completes the pair before you learn the answer e.g.' +
-           '<p class="instructions">CAT : ????' +
-           '<p class="instructions">Take a guess at which word completes the pair by entering it into the textbox. You will then see both words in the word pair.' +
-           '<p class="instructions">Once the series has finished, you will be prompted to recall the second word of each word pair, with the first word presented as prompts. Enter the second word of each word pair into the provided textbox.' +
-           '<p class="instructions"><b>Do not write down or record any of the word pairs, try to memorise them</b><br><br><br>' +
-           '<p class="instructions">Click "Next" when you are ready to begin.' 
-
-           ]
-       },
-       show_clickable_nav: true
-     }
-
-
-
-
-     var test_start = {
-      type: jsPsychInstructions,
-
-      pages:  [
-        '<p class="instructions"><h2>Test Phase</h2>' +
-        '<p class="instructions">You will now be tested on the word pairs that you learnt. For each pair, you will see the word that appeared on the left and you should enter the word that appeared on the right in the textbox</p>' 
-        ],
-      show_clickable_nav: true
-    }
-
-
-
-
-    var train_end = {
-      type: jsPsychInstructions,
-      on_finish: function(){
-        blocknum++;
-      },
-      pages: function(){
-        return [
-          '<p class="instructions">You have now completed the learning phase. Before commencing the test phase, you will play Tetris for 2 minutes. Press "Next" to commence playing' 
-
-          ]
-      },
-      show_clickable_nav: true
-    }
-
-
-
-
-
-    var conf_instruc = {
-      timeline: [
-      {
-        type: jsPsychHtmlSliderResponse,
-        css_classes: ["conf_instructions"],
-        stimulus: function(){
-
-          var header = jsPsych.timelineVariable('header')
-          return '<div id = "header" style = "position: relative;">' +header + "</div><br><br>" +
-          '<div id = "Iconf1" class = "conf_ins" style = "height: 25px; width: 154px; margin-top: 2px; margin-left: 15px;"></div>' +
-          '<div id = "Iconf2" class = "conf_ins" style = "height: 25px; width: 154px; margin-top: 2px; margin-left: 169px;"></div>' +
-          '<div id = "Iconf3" class = "conf_ins" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 323px;"></div>' +
-          '<div id = "Iconf4" class = "conf_ins" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 477px;"></div>' +
-          '<div id = "Iconf5" class = "conf_ins" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 631px;"></div>'
-        },
-        on_load: function(){
-
-          var w = window.innerWidth;
-          var marLeft = (w-800)/2;
-          document.getElementById("Iconf1").style.left = marLeft + "px";
-          document.getElementById("Iconf2").style.left = marLeft  + "px";
-          document.getElementById("Iconf3").style.left = marLeft  + "px";
-          document.getElementById("Iconf4").style.left = marLeft  + "px";
-          document.getElementById("Iconf5").style.left = marLeft  + "px";
-
-          var elementx = document.getElementById("jspsych-html-slider-response-response");
-          elementx.disabled = jsPsych.timelineVariable('disable');
-
-
-        },
-        min: 1,
-        max: 6,
-        step: 1,
-        slider_start: jsPsych.timelineVariable('start'),
-        slider_width: 800,
-        labels: ['Guessing', "", "", "", "", "Certain"],
-        button_label: "Submit",
-        require_movement: jsPsych.timelineVariable('require')
-      }
-
-      ],
-      timeline_variables: [
-        {start: 3, require: true, disable: false, header: 'A rating scale as shown below is used throughout the task. You will be able to rate your confidence of your judgements by choosing any point along the rating scale with your mouse. <br></br>Choose any point on the rating scale and click &apos;Submit&apos; to continue.'},
-        {start: 6, require: false, disable: true, header: 'During the task, if you are <strong>very sure</strong> that you made the correct judgement, you should respond <strong>&apos;Certain&apos;</strong>'},
-        {start: 1, require: false, disable: true, header: '<p class="instructions">If you are <strong>very unsure</strong> you made the correct judgement, you should respond <strong>&apos;Guessing&apos;</strong></p>'},
-        {start: 4, require: true, disable: false, header: '<p class="instructions">If you are <strong>somewhat sure</strong> about being correct, you should select a rating between the two descriptions.</p>' +
-        '<p class="instructions">If you understand how to use and take advantage of the whole rating scale, choose any point on the rating scale and click &apos;Submit&apos; to continue.</p>'}
-
-        ],
-      conditional_function: function(){
-       if(ratings_on === true){
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-
-  }
-
-
-
-
-
-  
-
-
-/////////////// **********  TETRIS FILLER TRIAL  ***************************** ///////////////
-
-
-  var tetris = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: '  <div id="tetris"> ' +
-    '<div id="menu"> ' +
-    ' <p id="start"><a href="javascript:play();">Press Space to Play.</a></p> ' +
-    '<p><canvas id="upcoming"></canvas></p> ' +
-    '<p>score <span id="score">00000</span></p> ' +
-    '<p>rows <span id="rows">0</span></p> ' +
-    '</div>' +
-    '<canvas id="canvas">' +
-    '  Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element' +
-    '</canvas>' +
-    '</div>',
-
-    choices: 'NO_KEYS',
-    on_load: function(){
-      makeTetris()
-    },
-    trial_duration: 120000
-  };
-
-
-/////////////// **********  Study TRIAL  ***************************** ///////////////
-
-
-
-
-  var train_trial = {
-    data: function(){
-      return {trialnum: trialnum, blocknum: blocknum}
-    },
-    timeline: [
-
-// Check Fullscreen
-    {
-      timeline: [
-
-        {type: jsPsychFullscreen,
-        message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
-        fullscreen_mode: true,
-        on_finish: function(){
-          in_fullscreen = true;
-        }
-      }
-      ],
-      conditional_function: function(){
-        if(in_fullscreen === true){
-          return false;
-        } else {
-          return true;
-        }
-      }
-    },
-
-
-
-// Fixation
-    {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus: '<p id = "fixation" style = "font-size: 70px">+</p>',
-      choices: 'NO_KEYS',
-      trial_duration: 1000,
-      on_finish: function(data){
-        data.trial_type = "Fixation";
-      }
-    },
-
-
-
-// Quiz
-    {
-      timeline: [
-
-      {
-        type: jsPsychSurveyText,
-        questions: function(){
-         return [
-          {prompt: '<p style = "font-size: 70px">'+ jsPsych.timelineVariable('cue') + ' : ????</p>'}
-          ]
-       },
-       on_finish: function(data){
-        data.trial_type = "Quiz";
-
-      },
-    }
-    ],
-      conditional_function: function(){
-        if(quiz_on === false){
-          return false;
-        } else {
-          return true;
-        }
-      }
-    },
-
-
-
-// Presentation
-    {
-      type: jsPsychHtmlKeyboardResponse,
-      stimulus: function(){
-        return '<p style = "font-size: 70px">'+ jsPsych.timelineVariable('cue') + ' : ' + jsPsych.timelineVariable('target') + '</p>'
-      },
-      choices: 'NO_KEYS',
-      trial_duration: 4000/pilot_speed,
-      on_finish: function(data){
-        data.trial_type = "Presentation";
-      }
-    },
-
-
-
-
-// Confidence Rating
-    {
-      timeline: [
-
-      {
-        type: jsPsychHtmlSliderResponse,
-        stimulus: "<h3>Rate your confidence:</h3>" +
-        '<div id = "conf1" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px; margin-left: 15px;"></div>' +
-        '<div id = "conf2" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 169px;"></div>' +
-        '<div id = "conf3" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 323px;"></div>' +
-        '<div id = "conf4" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 477px;"></div>' +
-        '<div id = "conf5" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 631px;"></div>',
-        min: 1,
-        max: 6,
-        step: 1,
-        slider_width: 800,
-        require_movement: true,
-        labels: ['Guessing', "", "", "", "", "Certain"],
-        button_label: "Submit",
-        on_finish: function(data){
-          data.trial_type = "Confidence Rating";
-
-        },
-        css_classes: ["conf_rating"]
-
-      }
-
-      ],
-      conditional_function: function(){
-        if(ratings_on === false){
-          return false;
-        } else {
-          return true;
-        }
-      }
-    },
-
-
-// Summary trial to store all the data typically required (nothing is displayed to the particpant) 
-    {
-      type: jsPsychCallFunction,
-      func: function(data){
-
-      },
-      on_finish: function(data){
-
-        data.phase = phase;
-        data.cue = jsPsych.timelineVariable('cue');
-        data.target = jsPsych.timelineVariable('target');
-        data.quiz_on = quiz_on[trialnum - 1];
-
-        if(quiz_on === true){
-          data.response = jsPsych.data.get().filter({trial_type: "Quiz"}).last().values()[0].response.Q0;
-          data.rt = jsPsych.data.get().filter({trial_type: "Quiz"}).last().values()[0].rt;
-
-      // Scoring
-          data.accuracy = 0; 
-          if(quiz_on == true & jsPsych.data.get().filter({trial_type: "Quiz"}).last().values()[0].response.Q0 == jsPsych.timelineVariable('target')) {data.accuracy = 1};
-
-      // Keep a running list of cues that were quizzed for ease of flagging in test
-          quizzed_cues.push(data.cue);
-
-
-        } else {
-
-          data.response = null;
-          data.rt = null;
-        }
-
-
-
-        data.trial_type = "Training Summary Trial"
-        trialnum++;
-
-      }
-    },
-
-
-
-    ],
-timeline_variables: [
-  {cue: 'beautiful', target: 'pretty'},
-  {cue: 'exact', target: 'precise'},
-  {cue: 'adorable', target: 'cute'},
-  {cue: 'bake', target: 'cake'},
-  {cue: 'mine', target: 'yours'},
-  {cue: 'nephew', target: 'niece'},
-  {cue: 'large', target: 'small'},
-  {cue: 'eye', target: 'see'},
-  {cue: 'jumpy', target: 'nervous'},
-  {cue: 'snatch', target: 'take'},
-
-  {cue: 'slender', target: 'thin'},
-  {cue: 'embrace', target: 'hug'},
-  {cue: 'breakfast', target: 'lunch'},
-  {cue: 'cashew', target: 'nut'},
-  {cue: 'annual', target: 'yearly'},
-  {cue: 'dump', target: 'garbage'},
-  {cue: 'gull', target: 'sea'},
-  {cue: 'mule', target: 'donkey'},
-  {cue: 'chunk', target: 'piece'},
-  {cue: 'strand', target: 'hair'},
-
-  {cue: 'ape', target: 'monkey'},
-  {cue: 'cigarette', target: 'smoke'},
-  {cue: 'trot', target: 'horse'},
-  {cue: 'juice', target: 'orange'},
-  {cue: 'tile', target: 'floor'},
-  {cue: 'hog', target: 'pig'},
-  {cue: 'sprain', target: 'ankle'},
-  {cue: 'assistant', target: 'helper'},
-  {cue: 'cop', target: 'police'},
-  {cue: 'ski', target: 'snow'},
-
-  {cue: 'stench', target: 'smell'},
-  {cue: 'drain', target: 'sink'},
-  {cue: 'artery', target: 'vein'},
-  {cue: 'deep', target: 'shallow'},
-  {cue: 'calendar', target: 'date'},
-  {cue: 'lumber', target: 'wood'},
-  {cue: 'wicker', target: 'basket'},
-  {cue: 'kind', target: 'nice'},
-  {cue: 'ceiling', target: 'roof'},
-  {cue: 'brother', target: 'sister'},
-
-  ],
-randomize_order: true
-};
-
-
-
-
-
-
-
-
-var test_trial = {
-  data: function(){
-    return {trialnum: trialnum, blocknum: blocknum}
-  },
-  timeline: [
-
-// Check Fullscreen
-  {
-    timeline: [
-
-      {type: jsPsychFullscreen,
-      message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
-      fullscreen_mode: true,
-      on_finish: function(){
-        in_fullscreen = true;
-      }
-    }
-    ],
-    conditional_function: function(){
-      if(in_fullscreen === true){
-        return false;
-      } else {
-        return true;
-      }
-    }
-  },
-
-
-// Fixation
-  {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p id = "fixation" style = "font-size: 70px">+</p>',
-    choices: 'NO_KEYS',
-    trial_duration: 1000,
-    on_finish: function(data){
-      data.trial_type = "Fixation";
-    }
-  },
-
-
-
-
-// Quiz
-  {
-    timeline: [
-
-    {
-      type: jsPsychSurveyText,
-      questions: function(){
-       return [
-        {prompt: '<p style = "font-size: 70px">'+ jsPsych.timelineVariable('cue') + ' : ????</p>'}
-        ]
-     },
-     on_finish: function(data){
-      data.trial_type = "Quiz";
-
-    },
-  }
-  ],
-    conditional_function: function(){
-      if(quiz_on === false){
-        return false;
-      } else {
-        return true;
-      }
-    }
-  },
-
-
-
-
-
-
-// Confidence Rating
-  {
-    timeline: [
-
-    {
-      type: jsPsychHtmlSliderResponse,
-      stimulus: "<h3>Rate your confidence:</h3>" +
-      '<div id = "conf1" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px; margin-left: 15px;"></div>' +
-      '<div id = "conf2" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 169px;"></div>' +
-      '<div id = "conf3" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 323px;"></div>' +
-      '<div id = "conf4" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 477px;"></div>' +
-      '<div id = "conf5" class = "conf" style = "height: 25px; width: 154px; margin-top: 2px;margin-left: 631px;"></div>',
-      min: 1,
-      max: 6,
-      step: 1,
-      slider_width: 800,
-      require_movement: true,
-      labels: ['Guessing', "", "", "", "", "Certain"],
-      button_label: "Submit",
-      on_finish: function(data){
-        data.trial_type = "Confidence Rating";
-
-      },
-      css_classes: ["conf_rating"]
-
-    }
-
-    ],
-    conditional_function: function(){
-      if(ratings_on === false){
-        return false;
-      } else {
-        return true;
-      }
-    }
-  },
-
-
-// Summary trial to store all the data typically required (nothing is displayed to the particpant) 
-  {
-    type: jsPsychCallFunction,
-    func: function(data){
-
-    },
-    on_finish: function(data){
-
-      data.phase = phase;
-      data.cue = jsPsych.timelineVariable('cue');
-      data.target = jsPsych.timelineVariable('target');
-
-
-      
-      data.response = jsPsych.data.get().filter({trial_type: "Quiz"}).last().values()[0].response.Q0;
-      data.rt = jsPsych.data.get().filter({trial_type: "Quiz"}).last().values()[0].rt;
-      
-      // Check if it was quizzed
-      if(quizzed_cues.includes(data.cue) == true) {data.quiz_on = true} else (data.quiz_on  = false);
-
-      // Scoring
-      data.accuracy = 0; 
-      if(jsPsych.data.get().filter({trial_type: "Quiz"}).last().values()[0].response.Q0 == jsPsych.timelineVariable('target')) {data.accuracy = 1};
-
-
-      data.trial_type = "Summary Trial"
-      trialnum++;
-
-    }
-  },
-
-
-
-  ],
-  timeline_variables: [
-    {cue: 'beautiful', target: 'pretty'},
-    {cue: 'exact', target: 'precise'},
-    {cue: 'adorable', target: 'cute'},
-    {cue: 'bake', target: 'cake'},
-    {cue: 'mine', target: 'yours'},
-    {cue: 'nephew', target: 'niece'},
-    {cue: 'large', target: 'small'},
-    {cue: 'eye', target: 'see'},
-    {cue: 'jumpy', target: 'nervous'},
-    {cue: 'snatch', target: 'take'},
-
-    {cue: 'slender', target: 'thin'},
-    {cue: 'embrace', target: 'hug'},
-    {cue: 'breakfast', target: 'lunch'},
-    {cue: 'cashew', target: 'nut'},
-    {cue: 'annual', target: 'yearly'},
-    {cue: 'dump', target: 'garbage'},
-    {cue: 'gull', target: 'sea'},
-    {cue: 'mule', target: 'donkey'},
-    {cue: 'chunk', target: 'piece'},
-    {cue: 'strand', target: 'hair'},
-
-    {cue: 'ape', target: 'monkey'},
-    {cue: 'cigarette', target: 'smoke'},
-    {cue: 'trot', target: 'horse'},
-    {cue: 'juice', target: 'orange'},
-    {cue: 'tile', target: 'floor'},
-    {cue: 'hog', target: 'pig'},
-    {cue: 'sprain', target: 'ankle'},
-    {cue: 'assistant', target: 'helper'},
-    {cue: 'cop', target: 'police'},
-    {cue: 'ski', target: 'snow'},
-
-    {cue: 'stench', target: 'smell'},
-    {cue: 'drain', target: 'sink'},
-    {cue: 'artery', target: 'vein'},
-    {cue: 'deep', target: 'shallow'},
-    {cue: 'calendar', target: 'date'},
-    {cue: 'lumber', target: 'wood'},
-    {cue: 'wicker', target: 'basket'},
-    {cue: 'kind', target: 'nice'},
-    {cue: 'ceiling', target: 'roof'},
-    {cue: 'brother', target: 'sister'},
-
-    ],
-  randomize_order: true
-};
-
-
-
-
-
-var debug = {
-  type: jsPsychSurveyText,
-  questions: [
-    {prompt: 'Did you experience any issues while completing this study?', rows: 5}
-    ]
 }
 
 
 
-  // Blocks
-
-const practice_block = {
-  timeline: [train_trial],
-  on_timeline_start: function(){
-    provide_feedback = true; 
-    phase = "Practice";
-  }
-}
-
-
-const test_block = {
-  timeline: [test_trial],
-  on_timeline_start: function(){
-    provide_feedback = false; 
-    phase = "Test";
-  }
-}
+// Load the global environment and the expeirment
+</script>
+<script src="assets/js/global.js"></script>
+<script src="assets/js/stimuli.js"></script>
+<script src="assets/js/tetris.js"></script>
+<script src="assets/js/experiment.js"></script>
+<script src="assets/js/survey.js"></script>
+<script>
 
 
+/* 
+  ===============================================================
+  =                 BUILD AND RUN THE EXPERIMENT                =
+  ===============================================================
+*/
 
-
-
-
-
-
-// Save data and redirect [shouldn't need to edit below]
-
-
-
-
-
-// Capture any url paramaters
-const PROLIFIC_PID = jsPsych.data.getURLVariable('PROLIFIC_PID');
-const SONAID = jsPsych.data.getURLVariable('SONAID');
-const pilot = jsPsych.data.getURLVariable('pilot');
-
-
-// Redirect based on SONA vs Prolific
-
-    // SONA
-if(typeof SONAID != 'undefined'){
-
-  jsPsych.data.addProperties({participant_id: SONAID});
-  jsPsych.data.addProperties({Source: "SONA"});
-
-  redirect_link = "https://sydneypsych.sona-systems.com/webstudy_credit.aspx?experiment_id="+sona_experiment_id+"&credit_token="+sona_credit_token+"&survey_code=" + SONAID + "&id=" + SONAID;
-    attention_redirect_link = "https://sydney.au1.qualtrics.com/jfe/form/SV_3h2qh8pBAnv00QK?SONAID=" + SONAID + "accuracy=" + jsPsych.data.get().filter({trial_type: "Summary Trial"}).select('accuracy').mean(); // A seperate link for those who fail the attention check
-
-
-  }
-
-    // PROLIFIC
-  if(typeof SONAID === 'undefined'){
-
-    jsPsych.data.addProperties({participant_id: PROLIFIC_PID});
-    jsPsych.data.addProperties({Source: "Prolific"});
-
-    redirect_link ="https://app.prolific.com/submissions/complete?cc=" + Prolific_redirect;
-    attention_redirect_link ="https://app.prolific.co/submissions/complete?cc=" + Prolific_failed_check; // A seperate link for those who fail the attention check
-  }
+/**
+ * Full timeline for Condition 1. 
+ * (You can create separate timelines/conditions if desired.)
+ */
+const timeline = [
+  browser_check,
+  enter_fullscreen,
+  participant_info_paid,  // from info_sheets.js 
+  participant_info_SONA,  // from info_sheets.js
+  demographics,           // from info_sheets.js
+  word_pairs,
+  debug,
+  save_data,
+  DEBRIEF_SONA,
+  data_saved,  
+];
 
 
 
 
-  // Save to OSF
-  const subject_id = jsPsych.randomization.randomID(10);
-  const filename = `${subject_id}.csv`;
 
 
-
-  const save_data = {
-    type: jsPsychPipe,
-    action: "save",
-    experiment_id: DataPipe_ID,
-    filename: filename,
-    data_string: ()=>jsPsych.data.get().csv()
-  };
-
-
-
-// Create Experiment
-
-  condition_1_timeline = [participant_info_paid, participant_info_SONA, demographics, instructions, practice_block, train_end, tetris, test_start, test_block, debug, save_data, DEBRIEF_SONA];
-
-  async function createExperiment(){
-    const condition = await jsPsychPipe.getCondition(DataPipe_ID);
-    jsPsych.data.addProperties({condition: condition});
-    if(condition == 0) { timeline = condition_1_timeline;}
-    if(condition == 1) { timeline = condition_1_timeline;}
-
-
-    jsPsych.run(timeline);
-  }
-
-
-
-
-  createExperiment();
-
+// Start the experiment – but wait until we have the `condition`
+(async () => {
+  await createExperiment();          // fetch condition & add it to the dataset
+  window.initStimuli(condition);     // build presentation & stimuli arrays
+  jsPsych.run(timeline);             // now launch the study
+})();
 
 </script>
 </html>
