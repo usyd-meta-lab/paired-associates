@@ -55,15 +55,15 @@
  * - DataPipe_ID:         The DataPipe ID to which the data will be saved.
  * - SONA/prolific info:  Used for setting up redirect links.
  */
-const DataPipe_ID = "Lczwvo2ReIZj";  // The DataPipe ID for where the data should be stored
-const sona_experiment_id = "NA";      // The SONA experiment ID 
-const sona_credit_token = "NA";       // The SONA credit token 
+const DataPipe_ID = "vmuVgxxOMTlT";  // The DataPipe ID for where the data should be stored
+const sona_experiment_id = "3483";      // The SONA experiment ID 
+const sona_credit_token = "d60a70d6901947c4ab21c2e9c1a584da";       // The SONA credit token 
 const Prolific_redirect = "CHGWKNI0"; // The Prolific redirect link (to credit)
 const Prolific_failed_check = "C13PIUOF"; // The Prolific redirect link for failing an attention check
 const task_time = 30; // (minutes) for the PIS
 const accuracy_criterion = .55; // Accuracy cut-off for manual data review
 let condition = null;
-
+ ratings_on = true;
 
 /**
  * Asynchronously fetches a 'condition' from DataPipe (if needed),
@@ -72,8 +72,9 @@ let condition = null;
  */
 async function createExperiment() {
    condition = await jsPsychPipe.getCondition(DataPipe_ID);
+
   jsPsych.data.addProperties({ condition: condition });
-  console.log(condition)
+
 
 }
 
@@ -120,8 +121,12 @@ const timeline = [
 // Start the experiment – but wait until we have the `condition`
 (async () => {
   await createExperiment();          // fetch condition & add it to the dataset
-  window.initStimuli(condition);     // build presentation & stimuli arrays
-  jsPsych.run(timeline);             // now launch the study
+
+if(condition == 0) {ratings_on = false;}
+if(condition == 1) {ratings_on = true;}
+    jsPsych.run(timeline);
+
+
 })();
 
 </script>

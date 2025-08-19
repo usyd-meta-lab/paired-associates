@@ -5,6 +5,13 @@
   ===============================================================
 */
 
+// Get current date and time in Sydney
+const nowInSydney = new Date().toLocaleString("en-AU", {
+  timeZone: "Australia/Sydney"
+});
+
+
+
 let trialnum = 1;           // Trial counter
 let blocknum = 1;           // Block counter
 let aborted = false;        // Tracks whether user was aborted from experiment
@@ -20,6 +27,13 @@ let in_fullscreen = false   // Tracks whether participant is in fullscreen (set 
     },
     on_finish: function(data) {
 
+        // Get current date and time in Sydney
+          var finishinSydney = new Date().toLocaleString("en-AU", {
+            timeZone: "Australia/Sydney"
+          });
+          jsPsych.data.addProperties({ finish_time: finishinSydney });
+
+
     // If user is forced to abort (wrong browser or device), show alert
       if (aborted === true) {
         alert("You must use Safari, Chrome or Firefox on a Desktop or Laptop to complete this experiment.");
@@ -28,23 +42,17 @@ let in_fullscreen = false   // Tracks whether participant is in fullscreen (set 
 
       if (aborted === false) {
 
-      // If not aborted, first save total time and then check average accuracy from summary trials
-        var start_time = jsPsych.getStartTime();
-        jsPsych.data.addProperties({ start_time: start_time });
-        var total_time = jsPsych.getTotalTime();
-        jsPsych.data.addProperties({ total_time: total_time });
-
 
         // Turn on to save a local copy
-        //jsPsych.data.get().localSave('csv','mydata.csv'); 
+       // jsPsych.data.get().localSave('csv','mydata.csv'); 
 
-        const meanCorrect = jsPsych.data.get().filter({trial_type: "Test Trial"}).select('correct').mean();
+        const meanCorrect = jsPsych.data.get().filter({trial_type: "Summary Trial"}).select('correct').mean();
         if (meanCorrect < accuracy_criterion) {
         // Failed check
-          window.location = attention_redirect_link;
+         window.location = attention_redirect_link;
         } else {
         // Passed check
-          window.location = redirect_link;
+        window.location = redirect_link;
         }
       }
     }
@@ -128,10 +136,7 @@ const debug = {
 const data_saved = {
   type: jsPsychHtmlButtonResponse,
   stimulus: '<p>Data saved successfully. Press <strong>Continue</strong> to be redirected back to your recruitment platform.</p>',
-  choices: ['Continue'],
-  on_load: function(data){
-    jsPsych.data.get().localSave('csv','mydata.csv'); 
-  }
+  choices: ['Continue']
 }
 
 
@@ -139,6 +144,7 @@ const data_saved = {
 const PROLIFIC_PID = jsPsych.data.getURLVariable('PROLIFIC_PID');
 const SONAID       = jsPsych.data.getURLVariable('SONAID');
 const pilot        = jsPsych.data.getURLVariable('pilot');
+jsPsych.data.addProperties({ start_time: nowInSydney });
 
 // Decide how to redirect user depending on whether they're from SONA or Prolific
 let redirect_link, attention_redirect_link;

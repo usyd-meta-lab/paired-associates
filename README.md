@@ -1,63 +1,57 @@
-# Paired Associates Task – Cue Density and Metacognition
+# Paired Associates Task
 
-This repository contains a fully implemented jsPsych experiment designed to investigate how cue density affects metacognitive judgments. The experiment includes study, restudy (quiz vs re-read), intermission (Tetris), test, and efficacy judgment phases.
+This repository contains a web-based **paired associates learning task** built with [jsPsych](https://www.jspsych.org/).  
+The task presents participants with cue–target word pairs to study, includes optional judgments of learning,  
+and then tests memory for the pairs after a distractor task.
 
----
+## Overview of the Task
 
-## 📋 Overview
+1. **Study Phase**  
+   - Participants view a series of word pairs (e.g., `apple – fruit`).  
+   - Each pair is displayed for 8 seconds.  
+   - In some conditions, participants also provide a **judgment of learning (JOL)** by rating how likely they are to remember the pair later.
 
-Participants learn pairs of cue-target words, experience a restudy phase (with variable quiz/re-read ratios), engage in a Tetris distractor task, and are tested on recall. At the end, of re-study they judge the relative efficacy of quizzing vs re-reading.
+2. **Intermission (Distractor Task)**  
+   - After studying, participants complete a short **Tetris game** (~2 minutes).  
+   - This prevents rehearsal and creates a delay before testing.
 
-### Key Features
+3. **Test Phase**  
+   - Participants are shown the **cue word** (e.g., `apple`) and asked to recall the **target word** (`fruit`).  
+   - Responses are marked as correct if they exactly match or are close under a lenient matching algorithm (edit distance ≤ 1 or transposition).
 
-- **Condition manipulation** via DataPipe to alter the ratio of quizzing to rereading
-- **Lenient response scoring** using Levenshtein edit distance and transposition detection
-- **Slider-based efficacy rating**
-- **Tetris game intermission** to reduce recency effects
-- **Hosted info sheet injection**
-- **Compatible with Prolific, SONA, and DataPipe**
+## Key Features
 
----
+- Built with **jsPsych 8.2.1** and standard plugins.  
+- Runs in fullscreen with browser compatibility checks.  
+- **Lenient scoring** of recall responses (handles typos and letter swaps using Levenshtein edit distance and transposition detection).  
+- Randomized order of word pairs across participants.  
+- Optional **JOL phase** can be toggled via experimental condition.  
+- Data is stored via [DataPipe](https://datapipe.org).  
 
-## 🧪 Experimental Flow
-
-1. **Pre-task setup**  
-   - Browser compatibility check  
-   - Fullscreen enforcement  
-   - Consent & demographic info (via injected info_sheets.js)
-
-2. **Study Phase**  
-   - 40 cue-target pairs shown for 4 seconds each
-
-3. **Restudy Phase**  
-   - Pairs randomly assigned to either:
-     - **Re-read**: Full pair shown again
-     - **Quiz**: Only cue shown; participant types target
-
-4. **Efficacy Judgment**  
-   - Slider: “Which was more effective re-reading or quizzing?”
-
-5. **Tetris Intermission**  
-   - Custom jsPsych Tetris plugin
-   - 2-minute gameplay
-
-6. **Test Phase**  
-   - Participants recall the target when shown the cue
-   - Responses scored both strictly and leniently
-
----
-
-## 🧰 File Structure
-
+## File Structure
 ```bash
-.
-├── index.html              # Main experiment launcher
-├── assets/
-│   ├── js/
-│   │   ├── global.js       # Shared parameters or functions
-│   │   ├── stimuli.js      # Word-pair list (cue, target)
-│   │   ├── tetris.js       # Tetris plugin and settings
-│   │   ├── experiment.js   # Main experimental logic
-│   │   ├── survey.js       # Optional post-task survey logic
-│   └── css/
-│       └── custom-css.css  # Styles for sliders, instructions, etc.
+- `index.html` — experiment entry point, loads dependencies and defines the timeline.  
+- `experiment.js` — main experiment code (study, JOL, Tetris, test, instructions).  
+- `stimuli.js` — lists of cue–target word pairs.  
+- `survey.js` — demographic and participant info questions.  
+- `word-pair-selection.R` — helper script for generating stimuli sets.  
+- `README.md` — current file.  
+```
+
+## Generating New Stimuli
+
+To generate new word-pair lists for the experiment:
+
+1. Open the `word-pair-selection.R` script in R.  
+2. Run the script to sample or construct new **cue–target pairs** from your chosen word pool.  
+3. Export the generated stimuli to a format compatible with `stimuli.js` (arrays of `cue` and `target`).  
+4. Replace the contents of `stimuli.js` with the new pairs to update the task.  
+
+This allows you to easily create multiple versions of the experiment or adapt it for different research questions.
+
+
+## Running the Experiment
+
+1. Open `index.html` in a browser or host on a web server (e.g., GitHub Pages).  
+2. The experiment will load automatically and save data to the configured **DataPipe ID**.  
+3. Adjust study duration, distractor duration, and conditions in `experiment.js`.  
