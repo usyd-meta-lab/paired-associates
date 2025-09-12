@@ -33,8 +33,7 @@ and then tests memory for the pairs after a distractor task.
 - `index.html` — experiment entry point, loads dependencies and defines the timeline.  
 - `experiment.js` — main experiment code (study, JOL, Tetris, test, instructions).  
 - `stimuli.js` — lists of cue–target word pairs.  
-- `survey.js` — optional file to
-add survey questions.  
+- `survey.js` — optional file to add survey questions.  
 - `word-pair-selection.R` — helper script for generating stimuli sets.  
 - `README.md` — current file.  
 ```
