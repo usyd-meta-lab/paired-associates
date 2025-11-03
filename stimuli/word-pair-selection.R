@@ -1,26 +1,22 @@
-library(MetaLab)
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# If reading the Florida norms Excel file:
+# install.packages(c("readxl","dplyr"))
+library(readxl)
 
-# Pairs
-pairs_unrelated <- sample_word_pairs(
-  path             = "Florida Norms.xlsx",
-  seed              = 999,          
-  n_pairs          = 70,
-  pair_type        = "unrelated",
-  unrelated_cutoff = 0,    # strict zero-links in either direction
-  min_char         = 3,    # optional length constraints
-  max_char         = 8,
-  max_iter         = 50000 # give the search plenty of room
+# Example: adjust the sheet / column names if yours differ
+florida <- read_xlsx("~/Downloads/paired-associates-main/stimuli/Florida Norms.xlsx")  # or the path you have
+
+# Suppose your columns are named "CUE", "TARGET", and "FSG":
+sample <- select_cue_target_sample(
+  df = florida,
+  n = 40,
+  target_mean_fsg = 0.1,
+  cue_min_chars = 3, cue_max_chars = 8,
+  target_min_chars = 3, target_max_chars = 8,
+  attempts = 8000,
+  seed = 42
 )
-
-
-# Remove bad words
-pairs_unrelated <- pairs_unrelated[!grepl(" ", pairs_unrelated$cue, fixed = TRUE), ]
-pairs_unrelated <- pairs_unrelated[!grepl(" ", pairs_unrelated$target, fixed = TRUE), ]
-
-pairs_unrelated <- subset(pairs_unrelated, cue != "L.A." & target != "INQUIRER" & cue != "CHOOSIER" & cue != "HIROHITO" )
-
-
+attr(sample, "achieved_mean_fsg")
+# sample
 
 
 
@@ -62,5 +58,5 @@ write_stimuli_js <- function(pairs_tbl,
   invisible(file)
 }
 
-write.csv(pairs_unrelated, "selected_word_pairs.csv")
-write_stimuli_js(pairs_unrelated, file = "stimuli.js") 
+write.csv(sample, "~/Desktop/selected_word_pairs.csv")
+write_stimuli_js(pairs_unrelated, file = "~/Desktop/stimuli.js") 
